@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
     @GetMapping("/home")
-    public void home(HttpSession session) {
+    public String home(HttpSession session) {
         String user = session.getAttribute("username").toString();
 
+        if(user == null) {
+            return "redirect:/login?error_msg=You must be logged in";
+        }
+        return "home";
     }
 
     @GetMapping("/error")
