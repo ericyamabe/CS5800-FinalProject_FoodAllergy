@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpSession;
 import com.foodallergy.app.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,15 +14,20 @@ public class LoginController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private HttpSession session;
+
     @GetMapping("/login")
-    public void login(Model model) {
-        model.addAttribute("username", "");
+    public String login() {
+        if (session.getAttribute("username") != null) {
+            return "redirect:/home";
+        }
+
+        return "login";
     }
 
     @PostMapping("/doLogin")
-    public String doLogin(@RequestParam String username,
-                          @RequestParam String password,
-                          HttpSession session) {
+    public String doLogin(@RequestParam String username, @RequestParam String password) {
         User user = (User) userRepository.findByUsername(username);
 
         if (user == null) {
@@ -35,6 +39,13 @@ public class LoginController {
         }
 
         session.setAttribute("username", user.getUsername());
+        session.setAttribute("userId", user.getUserId());
         return "redirect:/home";
+    }
+
+    @GetMapping("/logout")
+    public String logout() {
+        session.invalidate();
+        return "redirect:/login";
     }
 }

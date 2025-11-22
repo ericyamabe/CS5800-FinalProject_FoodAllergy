@@ -1,36 +1,61 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
 <head>
-    <title>Register</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <style>
-        body {
-            margin: 0px auto;
-        }
-
-        .row {
-            width: 1024px;
-            display: inline-block;
-        }
-
-    </style>
+    <title th:text="${pageTitle}"></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/assets/css/main.css" />
 </head>
-<body>
-<form action="/doRegister" method="post">
-<div id="register">
-    <div class="row">
-        <input type="text" name="name" placeholder="Name" />
-    </div>
-    <div class="row">
-        <input type="text" name="username" placeholder="Username" />
-    </div>
-    <div class="row">
-        <input type="password" name="password" placeholder="Password" />
-    </div>
-    <div class="row">
-        <input type="submit" name="submit" value="Register" />
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+
+            <!-- Section -->
+            <section>
+                <header class="main">
+                    <h1>Register For An Account</h1>
+                </header>
+                <form method="post" action="/doRegister">
+                    <div class="row gtr-uniform">
+                        <div class="col-6 col-12-xsmall">
+                            <input type="text" name="name" id="name" value="" placeholder="Name" />
+                        </div>
+                        <div class="col-6 col-12-xsmall">
+                            <input type="text" name="username" id="username" value="" placeholder="Username" />
+                        </div>
+                        <div class="col-6 col-12-xsmall">
+                            <input type="password" name="password" id="password" value="" placeholder="Password" />
+                        </div>
+                        <!-- Break -->
+                        <div class="col-12">
+                            <ul class="actions">
+                                <li><input type="submit" value="Register" class="primary" /></li>
+                                <li><input type="reset" value="Reset" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
     </div>
 </div>
-</form>
+
+<!-- Scripts -->
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/browser.min.js"></script>
+<script src="/assets/js/breakpoints.min.js"></script>
+<script src="/assets/js/util.js"></script>
+<script src="/assets/js/main.js"></script>
+
 </body>
 </html>
