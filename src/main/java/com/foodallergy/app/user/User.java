@@ -4,24 +4,33 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+
 
 @Entity
-public class UserEntity {
+@Table(name = "users")
+public class User {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer userId;
+    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
+    @Column(name="name")
     private String name;
+
+    @Column(name="username")
     private String username;
+
+    @Column(name="password")
     private String password;
 
-    public Integer getId() {
-        return this.userId;
+    public Integer getUserId() {
+        return this.id;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUserId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -45,7 +54,11 @@ public class UserEntity {
     }
 
     public void setPassword(String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        this.password = passwordEncoder.encode(password);
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Name: %s, Username: %s", this.name, this.username);
     }
 }
