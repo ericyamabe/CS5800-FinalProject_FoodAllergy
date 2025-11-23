@@ -19,7 +19,6 @@
     <!-- Main -->
     <div id="main">
         <div class="inner">
-
             <!-- Header -->
             <header id="header">
                 <a href="/home" class="logo">CS-5800 Final Project - Food Allergies Project</a>
@@ -36,12 +35,22 @@
             <!-- Section -->
             <section>
                 <header class="main">
-                    <h1>Event Details</h1>
+                    <h1>Add Food</h1>
                 </header>
-                <p>Foods mot commonly associated with this event:</p>
-                <ul>
-                    <li th:each="food : ${foods}" th:text="${food.getName()}"></li>
-                </ul>
+                <form method="post" action="/food/doAddFood">
+                    <div class="row gtr-uniform">
+                        <div class="col-12 col-12-xsmall">
+                            <input type="text" name="name" id="name" value="" placeholder="Name" />
+                        </div>
+                        <!-- Break -->
+                        <div class="col-12">
+                            <ul class="actions">
+                                <li><input type="submit" value="Save" class="primary" /></li>
+                                <li><input type="reset" value="Reset" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
             </section>
         </div>
     </div>
