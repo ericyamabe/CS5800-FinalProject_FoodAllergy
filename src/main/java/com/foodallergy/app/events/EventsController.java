@@ -53,8 +53,8 @@ public class EventsController {
         return "events";
     }
 
-    @GetMapping("/event/details/{id}")
-    public String eventDetail(@PathVariable("id") int id, Model model) {
+    @GetMapping("/events/details/{id}")
+    public String detail(@PathVariable("id") int id, Model model) {
         if (session.getAttribute("username") == null) {
             return "redirect:/login";
         }
@@ -77,15 +77,15 @@ public class EventsController {
         return "event-detail";
     }
 
-    @GetMapping("/logEvent")
-    public String logEvent(Model model) {
+    @GetMapping("/events/add")
+    public String add(Model model) {
 
         model.addAttribute("pageTitle", "Add Event");
         return "logEvent";
     }
 
-    @PostMapping("/doLogEvent")
-    public String doLogEvent(@RequestParam("name") String name, @RequestParam("associateFood") String associateFood) {
+    @PostMapping("/events/doAdd")
+    public String doAdd(@RequestParam("name") String name, @RequestParam("associateFood") String associateFood) {
         int userId = (int) session.getAttribute("userId");
         Events event = new Events();
         event.setName(name);
@@ -109,7 +109,7 @@ public class EventsController {
         return "associateFoodWithEvent";
     }
 
-    @PostMapping("doAssociate")
+    @PostMapping("/events/associate")
     public String doAssociate(@RequestParam("eventId")  int eventId, @RequestParam("associateFood") String associateFood) {
         String[] foods = associateFood.split(",");
 
