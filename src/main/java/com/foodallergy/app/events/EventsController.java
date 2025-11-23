@@ -110,13 +110,11 @@ public class EventsController {
     }
 
     @PostMapping("/events/associate")
-    public String doAssociate(@RequestParam("eventId")  int eventId, @RequestParam("associateFood") String associateFood) {
-        String[] foods = associateFood.split(",");
-
-        for(String foodId : foods) {
+    public String doAssociate(@RequestParam("eventId") int eventId, @RequestParam("foodIds") List<Integer> foodIds) {
+        for(int foodId : foodIds) {
             EventsFoodHash foodHash = new EventsFoodHash();
             foodHash.setEventId(eventId);
-            foodHash.setFoodId(Integer.parseInt(foodId));
+            foodHash.setFoodId(foodId);
             eventsFoodHashRepository.save(foodHash);
         }
 
