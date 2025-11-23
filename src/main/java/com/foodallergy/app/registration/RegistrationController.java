@@ -24,7 +24,7 @@ public class RegistrationController {
                              @RequestParam("username") String username,
                              @RequestParam("password") String password) {
         User user = new User();
-        user.setUsername("admin");
+        user.setUsername(username);
         user.setPassword(password);
         user.setName(name);
         this.userRepository.save(user);

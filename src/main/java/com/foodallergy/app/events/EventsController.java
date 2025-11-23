@@ -91,7 +91,7 @@ public class EventsController {
     }
 
     @PostMapping("/events/doAdd")
-    public String doAdd(@RequestParam("name") String name, @RequestParam("associateFood") String associateFood) {
+    public String doAdd(@RequestParam("name") String name, @RequestParam(value = "associateFood", defaultValue = "No") String associateFood) {
         int userId = (int) session.getAttribute("userId");
         Events event = new Events();
         event.setName(name);
