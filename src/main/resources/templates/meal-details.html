@@ -36,7 +36,7 @@
             <!-- Section -->
             <section>
                 <header class="main">
-                    <h1>Meal Detail - <span th:text="${mealName}"></span></h1>
+                    <h1 th:text="${mealName}"></h1>
                 </header>
                 <h3>Associated Foods</h3>
                 <div th:if="${#lists.isEmpty(associatedFoods)}">
