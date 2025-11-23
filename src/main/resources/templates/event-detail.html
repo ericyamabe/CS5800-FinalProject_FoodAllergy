@@ -45,6 +45,25 @@
                 <ul th:unless="${#lists.isEmpty(foods)}">
                     <li th:each="food : ${foods}" th:text="${food.getName()}"></li>
                 </ul>
+                <hr class="strong" />
+                <h3>Associate more Food</h3>
+                <form method="post" action="/events/associate">
+                    <div class="row gtr-uniform">
+                        <div class="col-12 col-12-xsmall">
+                            <input type="hidden" name="eventId" th:value="${eventId}" id="eventId" />
+                            <select multiple name="foodIds" id="foodIds">
+                                <option th:each="food : ${usersFoods}" th:value="${food.getId()}" th:text="${food.getName()}"></option>
+                            </select>
+                        </div>
+                        <!-- Break -->
+                        <div class="col-12">
+                            <ul class="actions">
+                                <li><input type="submit" value="Save" class="primary" /></li>
+                                <li><input type="reset" value="Reset" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
             </section>
         </div>
     </div>
