@@ -10,6 +10,15 @@ CREATE TABLE IF NOT EXISTS events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     user_id INT NOT NULL,
+    CONSTRAINT unique_pair UNIQUE (name, user_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS event_log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    event_id INT NOT NULL,
+    user_id INT NOT NULL,
+    date_occured DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -17,6 +26,7 @@ CREATE TABLE IF NOT EXISTS meal (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     user_id INT NOT NULL,
+    CONSTRAINT unique_pair UNIQUE (name, user_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -35,11 +45,11 @@ CREATE TABLE IF NOT EXISTS food (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS events_food_hash (
+CREATE TABLE IF NOT EXISTS food_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    event_id INT NOT NULL,
     food_id INT NOT NULL,
-    CONSTRAINT unique_pair UNIQUE (event_id, food_id),
+    user_id INT NOT NULL,
+    date_occured DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

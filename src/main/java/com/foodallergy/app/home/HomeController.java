@@ -1,5 +1,6 @@
 package com.foodallergy.app.home;
 
+import com.foodallergy.app.events.EventLogRepository;
 import com.foodallergy.app.events.Events;
 import com.foodallergy.app.events.EventsRepository;
 import com.foodallergy.app.food.Food;
@@ -10,17 +11,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class HomeController {
     @Autowired
-    HttpSession session;
+    private HttpSession session;
 
     @Autowired
-    EventsRepository eventsRepository;
+    private EventsRepository eventsRepository;
+
     @Autowired
     private FoodRepository foodRepository;
+
+    @Autowired
+    private EventLogRepository eventLogRepository;
 
     @GetMapping("/home")
     public String home(Model model) {
@@ -31,7 +37,14 @@ public class HomeController {
         String username = session.getAttribute("username").toString();
         int userId = (int) session.getAttribute("userId");
 
-        List<Events> events = eventsRepository.findByUserId(userId);
+        List<Object> eventsLog = eventLogRepository.getEventsWithCountByUserId(userId);
+        ArrayList<Events> events = new ArrayList<Events>();
+
+        for (Object eventLog : eventsLog) {
+            Events event = eventsRepository.findById(Integer.parseInt(eventLog.toString()));
+            events.add(event);
+        }
+
         List<Food> foods = foodRepository.findByUserId(userId);
 
         model.addAttribute("pageTitle", "Food Allergies Home Page");
