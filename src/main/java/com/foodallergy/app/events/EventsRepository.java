@@ -2,6 +2,8 @@ package com.foodallergy.app.events;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface EventsRepository extends CrudRepository<Events, Integer> {
+import java.util.List;
 
+public interface EventsRepository extends CrudRepository<Events, Integer> {
+    List<Events> findByUserId(int userId);
 }
