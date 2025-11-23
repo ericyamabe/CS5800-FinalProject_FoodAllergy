@@ -53,14 +53,18 @@ public class EventsController {
         return "events";
     }
 
-    @GetMapping("/events/details/{id}")
-    public String detail(@PathVariable("id") int id, Model model) {
+    @GetMapping("/events/details/{eventId}")
+    public String detail(@PathVariable("eventId") int eventId, Model model) {
         if (session.getAttribute("username") == null) {
             return "redirect:/login";
         }
 
+        int userId = (int) session.getAttribute("userId");
         ArrayList<Food> foodsList = new ArrayList<Food>();
-        List<EventsFoodHash> foods = eventsFoodHashRepository.findByEventId(id);
+        List<EventsFoodHash> foods = eventsFoodHashRepository.findByEventId(eventId);
+
+        List<Food> usersFoods = foodRepository.findByUserId(userId);
+        model.addAttribute("foods", usersFoods);
 
         for (EventsFoodHash food : foods) {
             Food foodItem = foodRepository.findById(food.getFoodId());
@@ -72,6 +76,8 @@ public class EventsController {
 
         model.addAttribute("pageTitle", "Event Details");
         model.addAttribute("foods", foodsList);
+        model.addAttribute("usersFoods", usersFoods);
+        model.addAttribute("eventId", eventId);
 
         String username = session.getAttribute("username").toString();
         return "event-detail";
@@ -118,6 +124,6 @@ public class EventsController {
             eventsFoodHashRepository.save(foodHash);
         }
 
-        return "redirect:/events";
+        return "redirect:/events/details/" + eventId;
     }
 }

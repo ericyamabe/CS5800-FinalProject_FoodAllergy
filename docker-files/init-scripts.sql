@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS events_meal_hash (
     id INT AUTO_INCREMENT PRIMARY KEY,
     event_id INT NOT NULL,
     meal_id INT NOT NULL,
+    CONSTRAINT unique_pair UNIQUE (event_id, meal_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS events_food_hash (
     id INT AUTO_INCREMENT PRIMARY KEY,
     event_id INT NOT NULL,
     food_id INT NOT NULL,
+    CONSTRAINT unique_pair UNIQUE (event_id, food_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -45,5 +47,6 @@ CREATE TABLE IF NOT EXISTS meal_food_hash (
     id INT AUTO_INCREMENT PRIMARY KEY,
     meal_id INT NOT NULL,
     food_id INT NOT NULL,
+    CONSTRAINT unique_pair UNIQUE (meal_id, food_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
