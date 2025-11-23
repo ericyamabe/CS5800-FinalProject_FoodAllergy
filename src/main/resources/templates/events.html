@@ -38,11 +38,14 @@
                 <header class="major">
                     <h2>Events</h2>
                 </header>
+                <div th:if="${#lists.isEmpty(events)}">
+                    <p>You haven't logged any events yet...why not log one <a href="/events/log">here</a>.</p>
+                </div>
                 <div class="features">
                     <article th:each="event: ${events}">
                         <span class="icon solid fa-signal"></span>
                         <div class="content">
-                            <h3><a th:href="@{/event/details/{id}(id=${event.getId()})}" th:text="${event.getName()}" /></h3>
+                            <h3><a th:href="@{/events/details/{id}(id=${event.getId()})}" th:text="${event.getName()}" /></h3>
                         </div>
                     </article>
                 </div>
@@ -63,21 +66,21 @@
                     <li>
                         <span class="opener">Events Menu</span>
                         <ul>
-                            <li><a href="/logEvent">Log An Event</a></li>
+                            <li><a href="/events/log">Log An Event</a></li>
                         </ul>
                     </li>
                     <li><a href="/meals">Meals</a></li>
                     <li>
                         <span class="opener">Meals Menu</span>
                         <ul>
-                            <li><a href="/logMeal">Log A Meal</a></li>
+                            <li><a href="/meal/log">Log A Meal</a></li>
                         </ul>
                     </li>
                     <li><a href="/food">Food</a></li>
                     <li>
                         <span class="opener">Food Menu</span>
                         <ul>
-                            <li><a href="/logFood">Log Food</a></li>
+                            <li><a href="/meal/log">Log Food</a></li>
                         </ul>
                     </li>
                 </ul>
