@@ -48,7 +48,7 @@ public class EventsController {
             return "redirect:/login?error_msg=You must be logged in";
         }
 
-        List<Object> eventsLog = eventLogRepository.getEventsWithCountByUserId(userId);
+        List<Object> eventsLog = eventLogRepository.getEventsIdsByCountByUserId(userId);
         ArrayList<Events> events = new ArrayList<Events>();
 
         for (Object eventLog : eventsLog) {
