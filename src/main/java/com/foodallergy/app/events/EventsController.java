@@ -27,6 +27,7 @@ public class EventsController {
 
     @Autowired
     private EventsMealHashRepository eventsMealHashRepository;
+
     @Autowired
     private FoodRepository foodRepository;
 
@@ -84,12 +85,41 @@ public class EventsController {
     }
 
     @PostMapping("/doLogEvent")
-    public String doLogEvent(@RequestParam("name") String name) {
+    public String doLogEvent(@RequestParam("name") String name, @RequestParam("associateFood") String associateFood) {
         int userId = (int) session.getAttribute("userId");
         Events event = new Events();
         event.setName(name);
         event.setUserId(userId);
         eventsRepository.save(event);
+
+        if(associateFood.equals("yes")) {
+            return "redirect:/events/addFood/" + event.getId();
+        }
+        return "redirect:/events";
+    }
+
+    @GetMapping("/events/addFood/{eventId}")
+    public String addFood(@PathVariable("eventId") int eventId, Model model) {
+        int userId = (int) session.getAttribute("userId");
+        List<Food> foods = foodRepository.findByUserId(userId);
+
+        model.addAttribute("pageTitle", "Associate Food With Event");
+        model.addAttribute("eventId", eventId);
+        model.addAttribute("foods", foods);
+        return "associateFoodWithEvent";
+    }
+
+    @PostMapping("doAssociate")
+    public String doAssociate(@RequestParam("eventId")  int eventId, @RequestParam("associateFood") String associateFood) {
+        String[] foods = associateFood.split(",");
+
+        for(String foodId : foods) {
+            EventsFoodHash foodHash = new EventsFoodHash();
+            foodHash.setEventId(eventId);
+            foodHash.setFoodId(Integer.parseInt(foodId));
+            eventsFoodHashRepository.save(foodHash);
+        }
+
         return "redirect:/events";
     }
 }

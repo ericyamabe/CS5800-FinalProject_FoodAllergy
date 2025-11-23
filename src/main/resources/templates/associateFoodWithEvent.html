@@ -36,18 +36,18 @@
             <!-- Section -->
             <section>
                 <header class="main">
-                    <h1>Add An Event</h1>
+                    <h1>Associate Food Items</h1>
                 </header>
-                <form method="post" action="/doLogEvent">
+                <form method="post" action="/doAssociate">
                     <div class="row gtr-uniform">
                         <div class="col-12 col-12-xsmall">
-                            <input type="text" name="name" id="name" value="" placeholder="Name" />
+                            <input type="hidden" name="eventId" id="eventId" th:value="${eventId}" />
                         </div>
                         <div class="col-12 col-12-xsmall">
-                            <input type="checkbox" name="associateFood" id="associateFood" value="yes" />
-                            <label for="associateFood">Associate food items after event creation?</label>
+                            <select multiple name="foodIds" id="foodIds">
+                                <option th:each="food: ${foods}" th:value="${food.getId()}"><span th:text="${food.getName()}"></span></option>
+                            </select>
                         </div>
-
                         <!-- Break -->
                         <div class="col-12">
                             <ul class="actions">
