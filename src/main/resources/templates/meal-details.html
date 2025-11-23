@@ -35,17 +35,35 @@
 
             <!-- Section -->
             <section>
-                <header class="major">
-                    <h2>Meals</h2>
+                <header class="main">
+                    <h1>Meal Detail - <span th:text="${mealName}"></span></h1>
                 </header>
-                <div class="features">
-                    <article th:each="meal: ${meals}">
-                        <span class="icon solid fa-signal"></span>
-                        <div class="content">
-                            <h3><a th:href="@{/meals/{mealId}(mealId=${meal.getId()})}" th:text="${meal.getName()}"></a></h3>
-                        </div>
-                    </article>
+                <h3>Associated Foods</h3>
+                <div th:if="${#lists.isEmpty(associatedFoods)}">
+                    <p>There are no associated Foods to list.</p>
                 </div>
+                <ul th:unless="${#lists.isEmpty(associatedFoods)}">
+                    <li th:each="assocFood: ${associatedFoods}" th:text="${assocFood.getName()}"></li>
+                </ul>
+                <hr class="strong" />
+                <h3>Associate more Food</h3>
+                <form method="post" action="/meals/doAssociateFood">
+                    <div class="row gtr-uniform">
+                        <div class="col-12 col-12-xsmall">
+                            <input type="hidden" name="mealId" th:value="${mealId}" id="mealId" />
+                            <select multiple name="foodIds" id="foodIds">
+                                <option th:each="food : ${foods}" th:value="${food.getId()}" th:text="${food.getName()}"></option>
+                            </select>
+                        </div>
+                        <!-- Break -->
+                        <div class="col-12">
+                            <ul class="actions">
+                                <li><input type="submit" value="Save" class="primary" /></li>
+                                <li><input type="reset" value="Reset" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
             </section>
         </div>
     </div>
