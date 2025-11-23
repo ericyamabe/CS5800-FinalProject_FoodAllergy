@@ -26,10 +26,10 @@ public class EventsController {
     private EventsFoodHashRepository eventsFoodHashRepository;
 
     @Autowired
-    private EventsMealHashRepository eventsMealHashRepository;
+    private FoodRepository foodRepository;
 
     @Autowired
-    private FoodRepository foodRepository;
+    EventLogRepository eventLogRepository;
 
     @GetMapping("/events")
     public String eventsHome(Model model) {
@@ -44,7 +44,13 @@ public class EventsController {
             return "redirect:/login?error_msg=You must be logged in";
         }
 
-        List<Events> events = eventsRepository.findByUserId(userId);
+        List<Object> eventsLog = eventLogRepository.getEventsWithCountByUserId(userId);
+        ArrayList<Events> events = new ArrayList<Events>();
+
+        for (Object eventLog : eventsLog) {
+            Events event = eventsRepository.findById(Integer.parseInt(eventLog.toString()));
+            events.add(event);
+        }
 
         model.addAttribute("pageTitle", "Events Home");
         model.addAttribute("username", username);
@@ -60,24 +66,18 @@ public class EventsController {
         }
 
         int userId = (int) session.getAttribute("userId");
-        ArrayList<Food> foodsList = new ArrayList<Food>();
-        List<EventsFoodHash> foods = eventsFoodHashRepository.findByEventId(eventId);
+        Events event = eventsRepository.findById(eventId);
+        ArrayList<String> occurences = new ArrayList<String>();
+        List<EventLog> eventLogs = eventLogRepository.findByEventId(eventId);
 
-        List<Food> usersFoods = foodRepository.findByUserId(userId);
-        model.addAttribute("foods", usersFoods);
-
-        for (EventsFoodHash food : foods) {
-            Food foodItem = foodRepository.findById(food.getFoodId());
-
-            if(foodItem != null) {
-                foodsList.add(foodItem);
-            }
+        for (EventLog eventLog : eventLogs) {
+            occurences.add(eventLog.getDateOccured().toString());
         }
 
         model.addAttribute("pageTitle", "Event Details");
-        model.addAttribute("foods", foodsList);
-        model.addAttribute("usersFoods", usersFoods);
         model.addAttribute("eventId", eventId);
+        model.addAttribute("eventName", event.getName());
+        model.addAttribute("occurenceDates", occurences);
 
         String username = session.getAttribute("username").toString();
         return "event-detail";
@@ -91,12 +91,20 @@ public class EventsController {
     }
 
     @PostMapping("/events/doAdd")
-    public String doAdd(@RequestParam("name") String name, @RequestParam(value = "associateFood", defaultValue = "No") String associateFood) {
+    public String doAdd(@RequestParam("name") String name,
+                        @RequestParam("eventDate") String eventDate,
+                        @RequestParam(value = "associateFood", defaultValue = "No") String associateFood) {
         int userId = (int) session.getAttribute("userId");
         Events event = new Events();
         event.setName(name);
         event.setUserId(userId);
         eventsRepository.save(event);
+
+        EventLog eventLog = new EventLog();
+        eventLog.setEventId(event.getId());
+        eventLog.setUserId(userId);
+        eventLog.setDateOccured(eventDate);
+        eventLogRepository.save(eventLog);
 
         if(associateFood.equals("yes")) {
             return "redirect:/events/addFood/" + event.getId();
@@ -104,25 +112,14 @@ public class EventsController {
         return "redirect:/events";
     }
 
-    @GetMapping("/events/addFood/{eventId}")
-    public String addFood(@PathVariable("eventId") int eventId, Model model) {
+    @PostMapping("/events/occurence/add")
+    public String addOccurence(@RequestParam("eventId") int eventId, @RequestParam("occurrenceDate") String occurrenceDate) {
         int userId = (int) session.getAttribute("userId");
-        List<Food> foods = foodRepository.findByUserId(userId);
-
-        model.addAttribute("pageTitle", "Associate Food With Event");
-        model.addAttribute("eventId", eventId);
-        model.addAttribute("foods", foods);
-        return "associateFoodWithEvent";
-    }
-
-    @PostMapping("/events/associate")
-    public String doAssociate(@RequestParam("eventId") int eventId, @RequestParam("foodIds") List<Integer> foodIds) {
-        for(int foodId : foodIds) {
-            EventsFoodHash foodHash = new EventsFoodHash();
-            foodHash.setEventId(eventId);
-            foodHash.setFoodId(foodId);
-            eventsFoodHashRepository.save(foodHash);
-        }
+        EventLog eventLog = new EventLog();
+        eventLog.setEventId(eventId);
+        eventLog.setUserId(userId);
+        eventLog.setDateOccured(occurrenceDate);
+        eventLogRepository.save(eventLog);
 
         return "redirect:/events/details/" + eventId;
     }

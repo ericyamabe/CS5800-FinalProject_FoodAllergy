@@ -35,12 +35,25 @@
             <!-- Section -->
             <section>
                 <header class="main">
-                    <h1>Add Food</h1>
+                    <h1>Log Food</h1>
                 </header>
                 <form method="post" action="/food/doAddFood">
                     <div class="row gtr-uniform">
                         <div class="col-12 col-12-xsmall">
-                            <input type="text" name="name" id="name" value="" placeholder="Name" />
+                            <select id="existingId" name="existingId" >
+                                <option value="" disabled selected hidden>Select an existing Food Item</option>
+                                <option th:each="food : ${foods}" th:value="${food.getId()}" th:text="${food.getName()}"></option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-12-xsmall">
+                            <h3>Or</h3>
+                        </div>
+                        <div class="col-12 col-12-xsmall">
+                            <input type="text" name="name" id="name" value="" placeholder="Enter New Food Name" />
+                        </div>
+                        <div class="col-12 col-12-xsmall">
+                            <label for="date">When did you eat it?</label>
+                            <input type="date" name="date" id="date" value="" placeholder="date" />
                         </div>
                         <!-- Break -->
                         <div class="col-12">

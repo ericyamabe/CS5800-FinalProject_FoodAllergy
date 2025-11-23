@@ -35,28 +35,28 @@
 
             <!-- Section -->
             <section>
-                <header class="major">
-                    <h2>Food</h2>
+                <header class="main">
+                    <h1 th:text="${foodName}"></h1>
                 </header>
-                <div th:if="${#lists.isEmpty(foods)}">
-                    <p>You haven't logged any food yet...why not log one <a href="/food/log">here</a>.</p>
-                </div>
-                <div class="table-wrapper" th:unless="${#lists.isEmpty(foods)}">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="food: ${foods}">
-                            <td th:text="${food.getName()}" /></td>
-                            <td><a th:href="@{/food/details/{foodId}(foodId=${food.getId()})}" class="button small">View</a></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div class="row gtr-uniform">
+                    <div class="col-6 col-12-xsmall">
+                        <p>Dates of Occurrence</p>
+                        <div th:if="${#lists.isEmpty(foodLog)}">
+                            <p>There are no dates logged for this event.</p>
+                        </div>
+                        <ul th:unless="${#lists.isEmpty(foodLog)}">
+                            <li th:each="log : ${foodLog}" th:text="${log.getDateOccured()}"></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-12-xsmall">
+                        <p>Events most commonly associated with this food:</p>
+                        <div th:if="${#lists.isEmpty(events)}">
+                            <p>There are no associated Events yet.  Keep Logging!</p>
+                        </div>
+                        <ul th:unless="${#lists.isEmpty(events)}">
+                            <li th:each="event : ${events}" th:text="${event.getName()}"></li>
+                        </ul>
+                    </div>
             </section>
         </div>
     </div>

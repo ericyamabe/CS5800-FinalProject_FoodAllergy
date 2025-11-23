@@ -36,34 +36,40 @@
             <!-- Section -->
             <section>
                 <header class="main">
-                    <h1>Event Details</h1>
+                    <h1 th:text="${eventName}"></h1>
                 </header>
-                <p>Foods most commonly associated with this event:</p>
-                <div th:if="${#lists.isEmpty(foods)}">
-                    <p>There are no associated foods yet.</p>
-                </div>
-                <ul th:unless="${#lists.isEmpty(foods)}">
-                    <li th:each="food : ${foods}" th:text="${food.getName()}"></li>
-                </ul>
-                <hr class="strong" />
-                <h3>Associate more Food</h3>
-                <form method="post" action="/events/associate">
-                    <div class="row gtr-uniform">
-                        <div class="col-12 col-12-xsmall">
-                            <input type="hidden" name="eventId" th:value="${eventId}" id="eventId" />
-                            <select multiple name="foodIds" id="foodIds">
-                                <option th:each="food : ${usersFoods}" th:value="${food.getId()}" th:text="${food.getName()}"></option>
-                            </select>
+                <div class="row gtr-uniform">
+                    <div class="col-6 col-12-xsmall">
+                        <p>Foods most commonly associated with this event:</p>
+                        <div th:if="${#lists.isEmpty(foods)}">
+                            <p>There are no associated foods yet.</p>
                         </div>
-                        <!-- Break -->
-                        <div class="col-12">
-                            <ul class="actions">
-                                <li><input type="submit" value="Save" class="primary" /></li>
-                                <li><input type="reset" value="Reset" /></li>
-                            </ul>
+                        <ul th:unless="${#lists.isEmpty(foods)}">
+                            <li th:each="food : ${foods}" th:text="${food.getName()}"></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-12-xsmall">
+                        <p>Dates of Occurence</p>
+                        <div th:if="${#lists.isEmpty(occurenceDates)}">
+                            <p>There are no dates logged for this event.</p>
+                        </div>
+                        <ul th:unless="${#lists.isEmpty(occurenceDates)}">
+                            <li th:each="date : ${occurenceDates}" th:text="${date}"></li>
+                        </ul>
+                        <hr id="strong" />
+                        <div>
+                            <p>Add Another Occurrence</p>
+                        </div>
+                        <div class="col-6">
+                            <form action="/events/occurence/add" method="post">
+                                <div>
+                                    <input type="hidden" name="eventId" th:value="${eventId}" id="eventId" />
+                                    <input type="date" name="occurrenceDate" id="occurrenceDate" placeholder="Date" />
+                                    <input type="submit" value="Save" class="primary small" />
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </form>
             </section>
         </div>
     </div>

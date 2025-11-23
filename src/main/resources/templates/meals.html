@@ -41,13 +41,19 @@
                 <div th:if="${#lists.isEmpty(meals)}">
                     <p>You haven't logged any meals yet...why not log one <a href="/meals/log">here</a>.</p>
                 </div>
-                <div class="features">
-                    <article th:each="meal: ${meals}">
-                        <span class="icon solid fa-signal"></span>
-                        <div class="content">
-                            <h3><a th:href="@{/meals/{mealId}(mealId=${meal.getId()})}" th:text="${meal.getName()}"></a></h3>
-                        </div>
-                    </article>
+                <div class="table-wrapper" th:unless="${#lists.isEmpty(meals)}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="meal: ${meals}">
+                                <td><a th:href="@{/meals/{mealId}(mealId=${meal.getId()})}" th:text="${meal.getName()}"></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
         </div>
