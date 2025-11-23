@@ -1,6 +1,7 @@
 package com.foodallergy.app.events;
 
 import com.foodallergy.app.food.Food;
+import com.foodallergy.app.food.FoodLogRepository;
 import com.foodallergy.app.food.FoodRepository;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,8 @@ public class EventsController {
 
     @Autowired
     EventLogRepository eventLogRepository;
+    @Autowired
+    private FoodLogRepository foodLogRepository;
 
     @GetMapping("/events")
     public String eventsHome(Model model) {
@@ -67,17 +71,29 @@ public class EventsController {
 
         int userId = (int) session.getAttribute("userId");
         Events event = eventsRepository.findById(eventId);
-        ArrayList<String> occurences = new ArrayList<String>();
         List<EventLog> eventLogs = eventLogRepository.findByEventId(eventId);
+        ArrayList<LocalDate> dates = new ArrayList<LocalDate>();
+        ArrayList<Food> foods = new ArrayList<Food>();
 
         for (EventLog eventLog : eventLogs) {
-            occurences.add(eventLog.getDateOccured().toString());
+            dates.add(LocalDate.parse(eventLog.getDateOccured().toString()));
+        }
+
+        List<Object> foodIds = foodLogRepository.getFoodMostCommonByDates(dates);
+
+        for (Object food : foodIds) {
+            Food f = foodRepository.findById(Integer.parseInt(food.toString()));
+
+            if(f != null) {
+                foods.add(f);
+            }
         }
 
         model.addAttribute("pageTitle", "Event Details");
         model.addAttribute("eventId", eventId);
         model.addAttribute("eventName", event.getName());
-        model.addAttribute("occurenceDates", occurences);
+        model.addAttribute("occurenceDates", dates);
+        model.addAttribute("foods", foods);
 
         String username = session.getAttribute("username").toString();
         return "event-detail";
