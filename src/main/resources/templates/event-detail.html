@@ -38,8 +38,11 @@
                 <header class="main">
                     <h1>Event Details</h1>
                 </header>
-                <p>Foods mot commonly associated with this event:</p>
-                <ul>
+                <p>Foods most commonly associated with this event:</p>
+                <div th:if="${#lists.isEmpty(foods)}">
+                    <p>There are no associated foods yet.</p>
+                </div>
+                <ul th:unless="${#lists.isEmpty(foods)}">
                     <li th:each="food : ${foods}" th:text="${food.getName()}"></li>
                 </ul>
             </section>
@@ -59,7 +62,7 @@
                     <li>
                         <span class="opener">Events Menu</span>
                         <ul>
-                            <li><a href="/logEvent">Log An Event</a></li>
+                            <li><a href="/events/log">Log An Event</a></li>
                         </ul>
                     </li>
                     <li><a href="/meals">Meals</a></li>

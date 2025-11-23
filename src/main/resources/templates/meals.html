@@ -38,6 +38,9 @@
                 <header class="major">
                     <h2>Meals</h2>
                 </header>
+                <div th:if="${#lists.isEmpty(meals)}">
+                    <p>You haven't logged any meals yet...why not log one <a href="/meals/log">here</a>.</p>
+                </div>
                 <div class="features">
                     <article th:each="meal: ${meals}">
                         <span class="icon solid fa-signal"></span>
@@ -63,7 +66,7 @@
                     <li>
                         <span class="opener">Events Menu</span>
                         <ul>
-                            <li><a href="/logEvent">Log An Event</a></li>
+                            <li><a href="/events/log">Log An Event</a></li>
                         </ul>
                     </li>
                     <li><a href="/meals">Meals</a></li>
