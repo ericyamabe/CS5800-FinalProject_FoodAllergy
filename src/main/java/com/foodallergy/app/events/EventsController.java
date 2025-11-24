@@ -3,8 +3,9 @@ package com.foodallergy.app.events;
 import com.foodallergy.app.food.Food;
 import com.foodallergy.app.food.FoodLogRepository;
 import com.foodallergy.app.food.FoodRepository;
-import org.springframework.ui.Model;
+import com.foodallergy.app.food.FoodsHelper;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,43 +19,33 @@ import java.util.List;
 
 @Controller
 public class EventsController {
+    Events events = Events.getInstance();
+    FoodsHelper foodsHelper = FoodsHelper.getInstance();
+
     @Autowired
     private HttpSession session;
 
     @Autowired
-    private EventsRepository eventsRepository;
+    EventLogRepository eventLogRepository;
 
     @Autowired
-    private EventsFoodHashRepository eventsFoodHashRepository;
+    EventsRepository eventsRepository;
 
     @Autowired
     private FoodRepository foodRepository;
 
     @Autowired
-    EventLogRepository eventLogRepository;
-    @Autowired
     private FoodLogRepository foodLogRepository;
 
     @GetMapping("/events")
     public String eventsHome(Model model) {
-        if (session.getAttribute("username") == null) {
+        if (!isLoggedIn()) {
             return "redirect:/login";
         }
 
-        String username = session.getAttribute("username").toString();
-        int userId = (int) session.getAttribute("userId");
-
-        if(username == null) {
-            return "redirect:/login?error_msg=You must be logged in";
-        }
-
-        List<Object> eventsLog = eventLogRepository.getEventsIdsByCountByUserId(userId);
-        ArrayList<Events> events = new ArrayList<Events>();
-
-        for (Object eventLog : eventsLog) {
-            Events event = eventsRepository.findById(Integer.parseInt(eventLog.toString()));
-            events.add(event);
-        }
+        String username = getSessionUsername();
+        int userId = getSessionUserId();
+        List<EventsEntity> events = this.events.getEventsIdsByCountByUserId(eventLogRepository, eventsRepository, userId);
 
         model.addAttribute("pageTitle", "Events Home");
         model.addAttribute("username", username);
@@ -65,78 +56,70 @@ public class EventsController {
 
     @GetMapping("/events/details/{eventId}")
     public String detail(@PathVariable("eventId") int eventId, Model model) {
-        if (session.getAttribute("username") == null) {
+        if (!isLoggedIn()) {
             return "redirect:/login";
         }
 
-        int userId = (int) session.getAttribute("userId");
-        Events event = eventsRepository.findById(eventId);
-        List<EventLog> eventLogs = eventLogRepository.findByEventId(eventId);
-        ArrayList<LocalDate> dates = new ArrayList<LocalDate>();
-        ArrayList<Food> foods = new ArrayList<Food>();
-
-        for (EventLog eventLog : eventLogs) {
-            dates.add(LocalDate.parse(eventLog.getDateOccured().toString()));
-        }
-
-        List<Object> foodIds = foodLogRepository.getFoodMostCommonByDates(dates);
-
-        for (Object food : foodIds) {
-            Food f = foodRepository.findById(Integer.parseInt(food.toString()));
-
-            if(f != null) {
-                foods.add(f);
-            }
-        }
+        EventsEntity event = events.findEventById(eventsRepository, eventId);
+        ArrayList<LocalDate> eventDates = events.findEventLogDatesByEventId(eventLogRepository, eventId);
+        ArrayList<Food> foods = foodsHelper.getFoodMostCommonByDates(foodLogRepository, foodRepository, eventDates);
 
         model.addAttribute("pageTitle", "Event Details");
         model.addAttribute("eventId", eventId);
         model.addAttribute("eventName", event.getName());
-        model.addAttribute("occurenceDates", dates);
+        model.addAttribute("occurenceDates", eventDates);
         model.addAttribute("foods", foods);
 
-        String username = session.getAttribute("username").toString();
         return "event-detail";
     }
 
     @GetMapping("/events/add")
     public String add(Model model) {
-
+        if (!isLoggedIn()) {
+            return "redirect:/login";
+        }
         model.addAttribute("pageTitle", "Add Event");
         return "logEvent";
     }
 
     @PostMapping("/events/doAdd")
-    public String doAdd(@RequestParam("name") String name,
-                        @RequestParam("eventDate") String eventDate,
-                        @RequestParam(value = "associateFood", defaultValue = "No") String associateFood) {
-        int userId = (int) session.getAttribute("userId");
-        Events event = new Events();
-        event.setName(name);
-        event.setUserId(userId);
-        eventsRepository.save(event);
-
-        EventLog eventLog = new EventLog();
-        eventLog.setEventId(event.getId());
-        eventLog.setUserId(userId);
-        eventLog.setDateOccured(eventDate);
-        eventLogRepository.save(eventLog);
-
-        if(associateFood.equals("yes")) {
-            return "redirect:/events/addFood/" + event.getId();
+    public String doAdd(@RequestParam("name") String name, @RequestParam("eventDate") String eventDate) {
+        if (!isLoggedIn()) {
+            return "redirect:/login";
         }
+
+        int userId = getSessionUserId();
+        EventsEntity event = new EventsEntity().setName(name).setUserId(userId).save(eventsRepository);
+        EventLog eventLog = new EventLog().setEventId(event.getId()).setUserId(userId).setDateOccured(eventDate)
+                .save(eventLogRepository);
+
         return "redirect:/events";
     }
 
     @PostMapping("/events/occurence/add")
-    public String addOccurence(@RequestParam("eventId") int eventId, @RequestParam("occurrenceDate") String occurrenceDate) {
-        int userId = (int) session.getAttribute("userId");
-        EventLog eventLog = new EventLog();
-        eventLog.setEventId(eventId);
-        eventLog.setUserId(userId);
-        eventLog.setDateOccured(occurrenceDate);
-        eventLogRepository.save(eventLog);
+    public String addOccurence(
+            @RequestParam("eventId") int eventId,
+            @RequestParam("occurrenceDate") String occurrenceDate) {
+        if (!isLoggedIn()) {
+            return "redirect:/login";
+        }
+
+        int userId = getSessionUserId();
+        EventLog eventLog = new EventLog().setEventId(eventId).setUserId(userId).setDateOccured(occurrenceDate)
+                .save(eventLogRepository);
 
         return "redirect:/events/details/" + eventId;
+    }
+
+    public boolean isLoggedIn() {
+        return session.getAttribute("username") != null;
+    }
+
+    public String getSessionUsername() {
+        return session.getAttribute("username").toString();
+    }
+
+    public int getSessionUserId() {
+        return (int) session.getAttribute("userId");
     }
 }
