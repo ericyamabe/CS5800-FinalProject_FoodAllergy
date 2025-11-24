@@ -3,12 +3,12 @@ package com.foodallergy.app.meals;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="meals")
+@Table(name="meal")
 public class Meals {
     @Id
-    @Column(name="mealId")
+    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int mealId;
+    private int id;
 
     @Column(name="name")
     private String name;
@@ -17,7 +17,7 @@ public class Meals {
     private int userId;
 
     public int getId() {
-        return userId;
+        return id;
     }
 
     public void setName(String name) {
