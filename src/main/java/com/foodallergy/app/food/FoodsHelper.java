@@ -38,9 +38,10 @@ public class FoodsHelper {
     public ArrayList<Food> getFoodMostCommonByDates(
             FoodLogRepository foodLogRepository,
             FoodRepository foodRepository,
-            ArrayList<LocalDate> dates) {
+            ArrayList<LocalDate> dates,
+            int userId) {
         ArrayList<Food> foods = new ArrayList<Food>();
-        List<Object> foodIds = foodLogRepository.getFoodMostCommonByDates(dates);
+        List<Object> foodIds = foodLogRepository.getFoodMostCommonByDates(dates, userId);
 
         for (Object food : foodIds) {
             Food f = foodRepository.findById(Integer.parseInt(food.toString()));
