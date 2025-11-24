@@ -1,43 +1,55 @@
 package com.foodallergy.app.events;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-@Entity
-@Table(name="events")
+@Component
 public class Events {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    public static Events instance;
 
-    @Column(name = "name")
-    private String name;
+    private Events() {}
 
-    @Column(name = "user_id")
-    private int userId;
-
-    public int getId() {
-        return id;
+    public static Events getInstance() {
+        if (instance == null) {
+            instance = new Events();
+        }
+        return instance;
     }
 
-    public String getName() {
-        return name;
+    public EventsEntity findEventById(EventsRepository eventsRepository, int eventId) {
+        return eventsRepository.findById(eventId);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public List<EventLog> findEventLogByEventId(EventLogRepository eventLogRepository, int eventId) {
+        return eventLogRepository.findByEventId(eventId);
     }
 
-    public int getUserId() {
-        return userId;
+    public ArrayList<LocalDate> findEventLogDatesByEventId(EventLogRepository eventLogRepository, int eventId) {
+        List<EventLog> eventLogs = eventLogRepository.findByEventId(eventId);
+        ArrayList<LocalDate> dates = new ArrayList<LocalDate>();
+
+        for (EventLog eventLog : eventLogs) {
+            dates.add(LocalDate.parse(eventLog.getDateOccured().toString()));
+        }
+
+        return dates;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public List<EventsEntity> getEventsIdsByCountByUserId(
+            EventLogRepository eventLogRepository,
+            EventsRepository eventsRepository,
+            int userId) {
+        List<Object> eventsLog = eventLogRepository.getEventsIdsByCountByUserId(userId);
+        ArrayList<EventsEntity> events = new ArrayList<EventsEntity>();
+
+        for (Object eventLog : eventsLog) {
+            EventsEntity event = eventsRepository.findById(Integer.parseInt(eventLog.toString()));
+            events.add(event);
+        }
+
+        return events;
     }
 }

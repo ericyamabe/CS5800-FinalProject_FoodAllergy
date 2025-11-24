@@ -23,23 +23,30 @@ public class EventLog {
         return eventId;
     }
 
-    public void setEventId(int eventId) {
+    public EventLog setEventId(int eventId) {
         this.eventId = eventId;
+        return this;
     }
 
     public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public EventLog setUserId(int userId) {
         this.userId = userId;
+        return this;
     }
 
     public String getDateOccured() {
         return dateOccured;
     }
 
-    public void setDateOccured(String dateOccured) {
+    public EventLog setDateOccured(String dateOccured) {
         this.dateOccured = dateOccured;
+        return this;
+    }
+
+    public EventLog save(EventLogRepository eventLogRepository) {
+        return eventLogRepository.save(this);
     }
 }

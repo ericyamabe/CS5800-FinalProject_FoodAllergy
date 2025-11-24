@@ -1,7 +1,7 @@
 package com.foodallergy.app.food;
 
 import com.foodallergy.app.events.EventLogRepository;
-import com.foodallergy.app.events.Events;
+import com.foodallergy.app.events.EventsEntity;
 import com.foodallergy.app.events.EventsRepository;
 import com.foodallergy.app.events.FoodLog;
 import jakarta.servlet.http.HttpSession;
@@ -56,7 +56,7 @@ public class FoodController {
         Food food = foodRepository.findById(foodId);
         List<FoodLog> foodLog = foodLogRepository.findByFoodId(foodId);
         ArrayList<LocalDate> dates = new ArrayList<LocalDate>();
-        ArrayList<Events> events = new ArrayList<Events>();
+        ArrayList<EventsEntity> events = new ArrayList<EventsEntity>();
 
         for (FoodLog log : foodLog) {
             dates.add(LocalDate.parse(log.getDateOccured().toString()));
@@ -65,7 +65,7 @@ public class FoodController {
         List<Object> eventIds = eventLogRepository.getEventsByDates(dates, userId);
 
         for(Object eventId : eventIds) {
-            Events event = eventsRepository.findById(Integer.parseInt(eventId.toString()));
+            EventsEntity event = eventsRepository.findById(Integer.parseInt(eventId.toString()));
             events.add(event);
         }
 
