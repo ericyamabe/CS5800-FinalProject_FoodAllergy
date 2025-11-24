@@ -74,7 +74,7 @@
                     <h2>Most Common Eaten Foods</h2>
                 </header>
                 <div th:if="${#lists.isEmpty(foods)}">
-                    <p>You haven't logged any food yet...why not log one <a href="/food/log">here</a>.</p>
+                    <p>You haven't logged any food yet...why not log one <a href="/food/add">here</a>.</p>
                 </div>
                 <div class="table-wrapper" th:unless="${#lists.isEmpty(foods)}">
                     <table>
