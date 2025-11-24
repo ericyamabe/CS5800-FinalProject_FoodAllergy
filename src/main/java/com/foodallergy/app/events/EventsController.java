@@ -60,9 +60,10 @@ public class EventsController {
             return "redirect:/login";
         }
 
+        int userId = getSessionUserId();
         EventsEntity event = events.findEventById(eventsRepository, eventId);
         ArrayList<LocalDate> eventDates = events.findEventLogDatesByEventId(eventLogRepository, eventId);
-        ArrayList<Food> foods = foodsHelper.getFoodMostCommonByDates(foodLogRepository, foodRepository, eventDates);
+        ArrayList<Food> foods = foodsHelper.getFoodMostCommonByDates(foodLogRepository, foodRepository, eventDates, userId);
 
         model.addAttribute("pageTitle", "Event Details");
         model.addAttribute("eventId", eventId);
