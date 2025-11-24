@@ -39,7 +39,7 @@
                     <h2>Meals</h2>
                 </header>
                 <div th:if="${#lists.isEmpty(meals)}">
-                    <p>You haven't logged any meals yet...why not log one <a href="/meals/log">here</a>.</p>
+                    <p>You haven't logged any meals yet...why not log one <a href="/meals/add">here</a>.</p>
                 </div>
                 <div class="table-wrapper" th:unless="${#lists.isEmpty(meals)}">
                     <table>

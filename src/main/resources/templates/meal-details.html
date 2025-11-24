@@ -51,7 +51,7 @@
                     <div class="row gtr-uniform">
                         <div class="col-12 col-12-xsmall">
                             <input type="hidden" name="mealId" th:value="${mealId}" id="mealId" />
-                            <select multiple name="foodIds" id="foodIds">
+                            <select name="foodIds" id="foodIds">
                                 <option th:each="food : ${foods}" th:value="${food.getId()}" th:text="${food.getName()}"></option>
                             </select>
                         </div>
