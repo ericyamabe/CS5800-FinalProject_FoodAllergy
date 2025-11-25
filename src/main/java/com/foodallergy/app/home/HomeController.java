@@ -19,7 +19,7 @@ import java.util.List;
 
 @Controller
 public class HomeController {
-    Events events = Events.getInstance();
+    private Events events = Events.getInstance();
     FoodsHelper foodsHelper = FoodsHelper.getInstance();
 
     @Autowired

@@ -30,9 +30,4 @@ public class RegistrationController {
         this.userRepository.save(user);
         return "login";
     }
-
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
-        return userRepository.findAll();
-    }
 }

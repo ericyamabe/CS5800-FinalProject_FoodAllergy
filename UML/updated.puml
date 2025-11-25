@@ -1,0 +1,317 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class HttpSession {}
+class CrudRepository{}
+
+class User {
+    - Integer id
+    - String name
+    - String username
+    - String password
+    + Integer getUserId()
+    + void setUserId(Integer id)
+    + String getName()
+    + void setName(String name)
+    + String getUsername()
+    + void setUsername(String username)
+    + String getPassword()
+    + setPassword(String password)
+    + String toString()
+}
+
+interface UserRepository {
+    + User findByUsername(String username)
+    + User findById(int id)
+}
+
+UserRepository *-- User
+UserRepository <|-- CrudRepository
+
+class Login {
+    - UserRepository userRepository
+}
+
+Login o-- UserRepository
+
+class LoginController {
+    - UserRepository userRepository
+    - HttpSession session
+    + String login()
+    + String doLogin(String username, String password)
+    + String logout()
+}
+
+LoginController o-- UserRepository
+LoginController o-- HttpSession
+
+class RegistrationController {
+    - UserRepository userRepository
+    + void register(Model model)
+    + String doRegister(String name, String username, String password)
+}
+
+RegistrationController o-- UserRepository
+
+class HomeController {
+    - Events events
+    - FoodsHelper foodsHelper
+    - HttpSession session
+    - EventsRepository eventsRepository
+    - FoodRepository foodRepository
+    - EventLogRepository eventLogRepository
+    - FoodLogRepository foodLogRepository
+    String home(Model model)
+}
+
+HomeController o-- Events
+HomeController o-- FoodsHelper
+HomeController o-- HttpSession
+HomeController o-- EventsRepository
+HomeController o-- FoodRepository
+HomeController o-- EventLogRepository
+HomeController o-- FoodLogRepository
+
+class Meal {
+    - private int mealId
+    - String name
+    - int userId
+    + int getId()
+    + void setName(String name)
+    + String getName()
+    + void setUserId(int userId)
+    + int getUserId()
+}
+
+class MealsController {
+    - HttpSession session
+    - MealsRepository mealsRepository
+    - FoodRepository foodRepository
+    - MealFoodHashRepository mealFoodHashRepository
+    + String meals(Model model)
+    + String logMeal(Model model)
+    + String doLogMeal(String name)
+    + String meals(Model model,int mealId)
+    + String doAssociateFood(int mealId, String foodIds)
+}
+
+MealsController o-- HttpSession
+MealsController o-- MealsRepository
+MealsController o-- FoodRepository
+MealsController o-- MealFoodHashRepository
+
+interface MealsRepository {
+    + List<Meals> findByUserId(int id)
+    + Meals findById(int id)
+}
+
+MealsRepository *-- Meal
+MealsRepository <|-- CrudRepository
+
+class MealFoodHash {
+    - int id
+    - int mealId
+    - int foodId
+    + int getFoodId()
+    + void setFoodId(int foodId)
+    + int getMealId()
+    + void setMealId(int mealId)
+}
+
+interface MealFoodHashRepository {
+    + List<MealFoodHash> findByMealId(int mealId)
+    + List<MealFoodHash> findByFoodId(int foodId)
+}
+
+MealFoodHashRepository *-- MealFoodHash
+MealFoodHashRepository <|-- CrudRepository
+
+class Food {
+    - int id
+    - String name
+    - int userId
+    + void setName(String name)
+    + void setUserId(int userId)
+    + int getId()
+    + String getName()
+    + int getUserId()
+}
+
+class FoodController {
+    - HttpSession session
+    - FoodRepository foodRepository
+    - FoodLogRepository foodLogRepository
+    - EventLogRepository eventLogRepository
+    - EventsRepository eventsRepository
+    + String food(Model model)
+    + String foodDetails(int foodId, Model model)
+    + String logFood(Model model)
+    + String doAddFood(int existingId, String name, String date)
+}
+
+FoodController o-- HttpSession
+FoodController o-- FoodRepository
+FoodController o-- FoodLogRepository
+FoodController o-- EventLogRepository
+FoodController o-- EventsRepository
+
+class FoodLog {
+    - int id
+    - int foodId
+    - int userId
+    - String dateOccured
+    + int getFoodId()
+    + void setFoodId(int foodId)
+    + int getUserId()
+    + void setUserId(int userId)
+    + String getDateOccured()
+    + void setDateOccured(String dateOccured)
+}
+
+interface FoodLogRepository {
+    + List<FoodLog> findByFoodId(Integer foodId)
+    + List<Object> getFoodMostCommonByDates(ArrayList<LocalDate> datesToFilterBy, Integer idToFilterBy)
+    + List<Object> getFoodMostCommonByUserId(Integer idToFilterBy)
+}
+
+FoodLogRepository *-- Food
+FoodLogRepository <|-- CrudRepository
+
+interface FoodRepository {
+    + Food findById(int id)
+    + List<Food> findByUserId(int id)
+}
+
+FoodRepository *-- Food
+FoodRepository <|-- CrudRepository
+
+class FoodsHelper {
+    - static FoodsHelper instance
+    - FoodsHelper()
+    + static FoodsHelper getInstance()
+    + ArrayList<Food> getMostCommonByUserId(FoodLogRepository foodLogRepository, FoodRepository foodRepository, int userId)
+    + ArrayList<Food> getFoodMostCommonByDates(FoodLogRepository foodLogRepository, FoodRepository foodRepository, ArrayList<LocalDate> dates, int userId)
+}
+
+FoodsHelper o-- FoodLogRepository
+FoodsHelper o-- FoodRepository
+
+class Events {
+    - static Events instance
+    - Events()
+    + static Events getInstance()
+    + EventsEntity findEventById(EventsRepository eventsRepository, int eventId)
+    + List<EventLog> findEventLogByEventId(EventLogRepository eventLogRepository, int eventId)
+    + ArrayList<LocalDate> findEventLogDatesByEventId(EventLogRepository eventLogRepository, int eventId)
+    + List<EventsEntity> getEventsIdsByCountByUserId( EventLogRepository eventLogRepository, EventsRepository eventsRepository, int userId)
+}
+
+class EventsController {
+    - Events events
+    - FoodsHelper foodsHelper
+    - HttpSession session
+    - EventLogRepository eventLogRepository
+    - EventsRepository eventsRepository
+    - private FoodRepository foodRepository
+    - private FoodLogRepository foodLogRepository
+    + String eventsHome(Model model)
+    + String detail(int eventId, Model model)
+    + String add(Model model)
+    + String doAdd(String name, String eventDate)
+    + String addOccurence(int eventId,String occurrenceDate)
+    + boolean isLoggedIn()
+    + String getSessionUsername()
+    + int getSessionUserId()
+}
+
+EventsController o-- FoodsHelper
+EventsController o-- HttpSession
+EventsController o-- Events
+EventsController o-- EventLogRepository
+EventsController o--  EventsRepository
+EventsController o-- FoodRepository
+EventsController o-- FoodLogRepository
+
+class EventsEntity {
+    - int id
+    - String name
+    - int userId
+    + int getId()
+    + String getName()
+    + EventsEntity setName(String name)
+    + getUserId()
+    + EventsEntity setUserId(int userId)
+    + EventsEntity save(EventsRepository eventsRepository)
+}
+
+EventsEntity o-- EventsRepository
+
+interface EventsRepository {
+    + List<EventsEntity> findByUserId(int userId)
+    + EventsEntity findById(int eventId)
+}
+
+EventsRepository *-- EventsEntity
+EventsRepository <|-- CrudRepository
+
+class EventLog {
+    - int id
+    - int eventId
+    - int userId
+    - String dateOccured
+    + int getEventId()
+    + EventLog setEventId(int eventId)
+    + int getUserId()
+    + String getDateOccured()
+    + EventLog setDateOccured(String dateOccured)
+    + EventLog save(EventLog Repository eventLogRespository)
+}
+
+EventLog o-- EventLogRepository
+
+interface EventLogRepository {
+    + List<EventLog> findByEventId(int eventId)
+    + List<Object> getEventsIdsByCountByUserId(int userId)
+    + List<Object> getEventsByDates(ArrayList<LocalDate> datesToFilterBy, Integer idToFilterBy)
+}
+
+EventLogRepository *-- EventLog
+EventLogRepository <|-- CrudRepository
+
+class EventsFoodHash {
+    - int id
+    - int eventId
+    - int foodId
+    + int getEventId()
+    + void setEventId(int eventId)
+    + int getFoodId()
+    + void setFoodId(int foodId)
+}
+
+interface EventsFoodHashRepository {
+    + List<EventsFoodHash> findByFoodId(Integer FoodId)
+    + List<EventsFoodHash> findByEventId(Integer eventId)
+}
+
+EventsFoodHashRepository *-- EventsFoodHash
+EventsFoodHashRepository <|-- CrudRepository
+
+class EventsMealHash {
+    - private int id
+    - private int eventId
+    - private int mealId
+    + public int getEventId()
+    + public void setEventId(int eventId)
+    + public int getMealId()
+    + public void setMealId(int mealId)
+}
+
+interface EventsMealHashRepository {
+    + List<EventsMealHash> findByMealId(Integer mealId)
+    + List<EventsMealHash> findByEventId(Integer eventId)
+}
+
+EventsMealHashRepository *-- EventsMealHash
+EventsMealHashRepository <|-- CrudRepository
+
+@enduml

@@ -16,13 +16,14 @@ import java.util.List;
 @Controller
 public class MealsController {
     @Autowired
-    HttpSession session;
+    private HttpSession session;
 
     @Autowired
-    MealsRepository mealsRepository;
+    private MealsRepository mealsRepository;
 
     @Autowired
-    FoodRepository foodRepository;
+    private FoodRepository foodRepository;
+
     @Autowired
     private MealFoodHashRepository mealFoodHashRepository;
 

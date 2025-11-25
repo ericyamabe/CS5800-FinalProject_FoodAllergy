@@ -26,10 +26,10 @@ public class EventsController {
     private HttpSession session;
 
     @Autowired
-    EventLogRepository eventLogRepository;
+    private EventLogRepository eventLogRepository;
 
     @Autowired
-    EventsRepository eventsRepository;
+    private EventsRepository eventsRepository;
 
     @Autowired
     private FoodRepository foodRepository;
