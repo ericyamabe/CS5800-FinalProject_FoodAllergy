@@ -1,6 +1,6 @@
 package com.foodallergy.app.events;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.foodallergy.app.food.FoodLogRepository;
 import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -51,5 +51,12 @@ public class Events {
         }
 
         return events;
+    }
+
+    public float getFoodRelatedToAllEventsCount( FoodLogRepository foodLogRepository, int foodId, ArrayList<LocalDate> datesToFilterBy) {
+        int foodRelatedCount = foodLogRepository.getFoodLogCountByDates(foodId, datesToFilterBy);
+        int totalFoodConsumedCount = foodLogRepository.getFoodLogCount(foodId);
+        float probability = (float) foodRelatedCount / totalFoodConsumedCount;
+        return probability * 100;
     }
 }
