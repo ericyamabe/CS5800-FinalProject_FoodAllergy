@@ -26,6 +26,9 @@
                     <h1>Login</h1>
                 </header>
                 <p>Or click <a href="/register">here</a> to  <a href="/register">register</a> for an account.</p>
+                <div th:unless="${#lists.isEmpty(registration_message)}" style="border: 1px solid #02a35d; background-color: #7dfac4; color: #02a35d; place-content: center; padding-top: 10px; display: grid; margin-bottom: 20px; font-weight: bold;">
+                    <p th:text="${registration_message}"></p>
+                </div>
                 <form method="post" action="/doLogin">
                     <div class="row gtr-uniform">
                         <div class="col-6 col-12-xsmall">
