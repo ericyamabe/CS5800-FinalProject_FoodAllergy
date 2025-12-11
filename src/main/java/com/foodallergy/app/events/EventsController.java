@@ -1,9 +1,6 @@
 package com.foodallergy.app.events;
 
-import com.foodallergy.app.food.Food;
-import com.foodallergy.app.food.FoodLogRepository;
-import com.foodallergy.app.food.FoodRepository;
-import com.foodallergy.app.food.FoodsHelper;
+import com.foodallergy.app.food.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +60,21 @@ public class EventsController {
         EventsEntity event = events.findEventById(eventsRepository, eventId);
         ArrayList<LocalDate> eventDates = events.findEventLogDatesByEventId(eventLogRepository, eventId);
         ArrayList<Food> foods = foodsHelper.getFoodMostCommonByDates(foodLogRepository, foodRepository, eventDates, userId);
+        ArrayList<FoodAdapter> foodlist = new ArrayList<FoodAdapter>();
+
+        for(Food food : foods) {
+            FoodAdapter tempFood = new FoodAdapter(food);
+            int foodId = tempFood.getId();
+            double probability = events.getFoodRelatedToAllEventsCount(foodLogRepository,foodId, eventDates);
+            tempFood.setAllergyProbability(probability);
+            foodlist.add(tempFood);
+        }
 
         model.addAttribute("pageTitle", "Event Details");
         model.addAttribute("eventId", eventId);
         model.addAttribute("eventName", event.getName());
         model.addAttribute("occurenceDates", eventDates);
-        model.addAttribute("foods", foods);
+        model.addAttribute("foods", foodlist);
 
         return "event-detail";
     }
