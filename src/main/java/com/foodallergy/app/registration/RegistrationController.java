@@ -1,6 +1,6 @@
 package com.foodallergy.app.registration;
 
-import com.foodallergy.app.user.User;
+import com.foodallergy.app.user.UserEntity;
 import com.foodallergy.app.user.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class RegistrationController {
     public String doRegister(@RequestParam("name") String name,
                              @RequestParam("username") String username,
                              @RequestParam("password") String password, Model model) {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setUsername(username);
         user.setPassword(password);
         user.setName(name);
@@ -46,7 +46,7 @@ public class RegistrationController {
     }
 
     @GetMapping(path="/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
+    public @ResponseBody Iterable<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
 }

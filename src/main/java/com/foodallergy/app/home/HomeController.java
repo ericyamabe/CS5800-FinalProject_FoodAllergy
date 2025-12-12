@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -43,6 +44,15 @@ public class HomeController {
             return "redirect:/login";
         }
 
+        String permissionLevel;
+        HashMap<String, Boolean> permissions = (HashMap<String, Boolean>) session.getAttribute("permissions");
+
+        if (permissions.get("admin") == Boolean.TRUE) {
+            permissionLevel = "admin";
+        } else {
+            permissionLevel = "standard";
+        }
+
         String username = session.getAttribute("username").toString();
         int userId = (int) session.getAttribute("userId");
 
@@ -53,6 +63,7 @@ public class HomeController {
         model.addAttribute("username", username);
         model.addAttribute("events", eventsList);
         model.addAttribute("foods", foods);
+        model.addAttribute("permissionLevel", permissionLevel);
         return "home";
     }
 
