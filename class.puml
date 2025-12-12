@@ -113,6 +113,8 @@ class States {
 States --> StateIterator
 
 Iterator <|-- StateIterator
+Iterable <|-- States
+States o-- RegistrationController
 
 class HomeController {
     - Events events
