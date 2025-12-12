@@ -30,6 +30,9 @@ public class UserEntity {
     @Column(name="permission")
     private String permission;
 
+    @Column(name="state")
+    private String state;
+
     public Integer getUserId() {
         return this.id;
     }
@@ -68,6 +71,14 @@ public class UserEntity {
 
     public String getPermission() {
         return this.permission;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getState() {
+        return this.state;
     }
 
     @Override
