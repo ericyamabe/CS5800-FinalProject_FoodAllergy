@@ -16,6 +16,14 @@ public class MealFoodHash {
     @Column(name="food_id")
     private int foodId;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getFoodId() {
         return foodId;
     }
