@@ -1,6 +1,18 @@
 @startuml
 'https://plantuml.com/class-diagram
 
+class Food {
+    - int id
+    - String name
+    - int userId
+    + void setName(String name)
+    + void setUserId(int userId)
+    + int getId()
+    + void setId(int id)
+    + String getName()
+    + int getUserId()
+}
+FoodAdapter --* Food
 interface FoodInterface {
     + void setName(String name)
     + void setUserId(int userId)
@@ -25,7 +37,7 @@ class FoodAdapter {
 }
 
 FoodAdapter ..|> FoodInterface
-
+EventsController o-- Food
 class EventsController {
     - Events events
     - FoodsHelper foodsHelper
