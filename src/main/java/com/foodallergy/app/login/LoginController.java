@@ -1,8 +1,7 @@
 package com.foodallergy.app.login;
 
-import com.foodallergy.app.user.UserRepository;
+import com.foodallergy.app.user.*;
 import jakarta.servlet.http.HttpSession;
-import com.foodallergy.app.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,15 +28,20 @@ public class LoginController {
 
     @PostMapping("/doLogin")
     public String doLogin(@RequestParam String username, @RequestParam String password) {
-        User user = (User) userRepository.findByUsername(username);
+        UserEntity userEntity = (UserEntity) userRepository.findByUsername(username);
+        UserFactory userFactory = new UserFactory();
+        User user = userFactory.getUser(userEntity);
 
-        if (user == null) {
-            return "redirect:/login?error_msg=User or password is incorrect";
+        if (userEntity == null) {
+            session.setAttribute("errorMessage", "User or password is incorrect");
+            return "redirect:/login";
         }
 
-        if (!user.getPassword().equals(password)) {
+        if (!userEntity.getPassword().equals(password)) {
+            session.setAttribute("errorMessage", "User or password is incorrect");
             return "redirect:/login?error_msg=Username or password is incorrect";
         }
+
 
         session.setAttribute("username", user.getUsername());
         session.setAttribute("userId", user.getUserId());

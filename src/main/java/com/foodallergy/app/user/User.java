@@ -1,64 +1,62 @@
 package com.foodallergy.app.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
+import java.util.HashMap;
 
+public abstract class User {
+    protected UserEntity userEntity;
 
-@Entity
-@Table(name = "users")
-public class User {
-    @Id
-    @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(name="name")
-    private String name;
-
-    @Column(name="username")
-    private String username;
-
-    @Column(name="password")
-    private String password;
-
-    public Integer getUserId() {
-        return this.id;
+    public User(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
-    public void setUserId(Integer id) {
-        this.id = id;
+    public Integer getUserId() {
+        return this.userEntity.getUserId();
     }
 
     public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return this.userEntity.getName();
     }
 
     public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+        return this.userEntity.getUsername();
     }
 
     public String getPassword() {
-        return this.password;
+        return this.userEntity.getPassword();
+    }
+
+    public String getPermission() {
+        return this.userEntity.getPermission();
+    }
+
+    public void setUserId(Integer id) {
+        this.userEntity.setUserId(id);
+    }
+
+    public void setName(String name) {
+        this.userEntity.setName(name);
+    }
+
+    public void setUsername(String username) {
+        this.userEntity.setUsername(username);
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.userEntity.setPassword(password);
+    }
+
+    public void setPermission(String permission) {
+        this.userEntity.setPermission(permission);
     }
 
     @Override
     public String toString() {
-        return String.format("Name: %s, Username: %s", this.name, this.username);
+        return this.userEntity.toString();
+    }
+
+    public HashMap getPermissions() {
+        HashMap<String, Boolean> permissions = new HashMap<String, Boolean>();
+        permissions.put("admin", Boolean.FALSE);
+        return permissions;
     }
 }
