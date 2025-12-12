@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -53,6 +51,7 @@ public class HomeController {
 
         String username = session.getAttribute("username").toString();
         int userId = (int) session.getAttribute("userId");
+
         UserEntity userEntity = (UserEntity) userRepository.findById(userId);
         UserFactory userFactory = new UserFactory();
         User user = userFactory.getUser(userEntity);

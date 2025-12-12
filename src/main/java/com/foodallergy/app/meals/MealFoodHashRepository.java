@@ -5,5 +5,4 @@ import java.util.List;
 
 public interface MealFoodHashRepository extends CrudRepository<MealFoodHash, Long> {
     List<MealFoodHash> findByMealId(int mealId);
-    List<MealFoodHash> findByFoodId(int foodId);
 }
