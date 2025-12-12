@@ -37,6 +37,12 @@
                         <div class="col-12 col-12-xsmall">
                             <input type="password" name="password" id="password" value="" placeholder="Password" />
                         </div>
+                        <div class="col-12 col-12-xsmall">
+                            <select id="state" name="state">
+                                <option>Please Select</option>
+                                <option th:each="state : ${states}" th:value="${state}" th:text="${state}"></option>
+                            </select>
+                        </div>
                         <!-- Break -->
                         <div class="col-12">
                             <ul class="actions">
