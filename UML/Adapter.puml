@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface FoodInterface {
+    + void setName(String name)
+    + void setUserId(int userId)
+    + int getId()
+    + String getName()
+    + int getUserId();
+    + double getAllergyProbability()
+    + void setAllergyProbability(double allergyProbability)
+}
+
+class FoodAdapter {
+    - Food food
+    - double allergyProbability
+    + FoodAdapter(Food food)
+    + void setName(String name)
+    + void setUserId(int userId)
+    + void setAllergyProbability(double allergyProbability)
+    + int getId()
+    + String getName()
+    + int getUserId()
+    + double getAllergyProbability()
+}
+
+FoodAdapter ..|> FoodInterface
+
+class EventsController {
+    - Events events
+    - FoodsHelper foodsHelper
+    - HttpSession session
+    - EventLogRepository eventLogRepository
+    - EventsRepository eventsRepository
+    - private FoodRepository foodRepository
+    - private FoodLogRepository foodLogRepository
+    + String eventsHome(Model model)
+    + String detail(int eventId, Model model)
+    + String add(Model model)
+    + String doAdd(String name, String eventDate)
+    + String addOccurence(int eventId,String occurrenceDate)
+    + boolean isLoggedIn()
+    + String getSessionUsername()
+    + int getSessionUserId()
+}
+EventsController o-- FoodAdapter
+@enduml

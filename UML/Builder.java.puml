@@ -1,0 +1,50 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class EventsEntity {
+    - int id
+    - String name
+    - int userId
+    + int getId()
+    + void setId(int id)
+    + String getName()
+    + EventsEntity setName(String name)
+    + getUserId()
+    + EventsEntity setUserId(int userId)
+    + EventsEntity save(EventsRepository eventsRepository)
+}
+
+class EventLog {
+    - int id
+    - int eventId
+    - int userId
+    - String dateOccured
+    + int getEventId()
+    + EventLog setEventId(int eventId)
+    + int getUserId()
+    + String getDateOccured()
+    + EventLog setDateOccured(String dateOccured)
+    + EventLog save(EventLog Repository eventLogRespository)
+}
+
+class EventsController {
+    - Events events
+    - FoodsHelper foodsHelper
+    - HttpSession session
+    - EventLogRepository eventLogRepository
+    - EventsRepository eventsRepository
+    - private FoodRepository foodRepository
+    - private FoodLogRepository foodLogRepository
+    + String eventsHome(Model model)
+    + String detail(int eventId, Model model)
+    + String add(Model model)
+    + String doAdd(String name, String eventDate)
+    + String addOccurence(int eventId,String occurrenceDate)
+    + boolean isLoggedIn()
+    + String getSessionUsername()
+    + int getSessionUserId()
+}
+
+EventsController o-- EventsEntity
+EventsController o-- EventLog
+@enduml

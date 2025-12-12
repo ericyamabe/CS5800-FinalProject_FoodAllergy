@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface Iterator {}
+Interface Iterable {}
+
+class StateIterator {
+    - int indexInCollection
+    - int stateCollectionSize
+    - ArrayList<String> stateList
+    + StateIterator(States allStates)
+    + boolean hasNext()
+    + String next()
+    + void remove()
+}
+
+class States {
+    - ArrayList<String> states
+    + States()
+    + ArrayList<String> getStates()
+    + StateIterator iterator()
+}
+
+class RegistrationController {
+    - UserRepository userRepository
+    + void register(Model model)
+    + String doRegister(String name, String username, String password)
+}
+
+States --> StateIterator
+
+Iterator <|-- StateIterator
+Iterable <|-- States
+States o-- RegistrationController
+
+
+@enduml

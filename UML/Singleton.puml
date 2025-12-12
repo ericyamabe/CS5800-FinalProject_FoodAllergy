@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Events {
+    - static Events instance
+    - Events()
+    + static Events getInstance()
+    + EventsEntity findEventById(EventsRepository eventsRepository, int eventId)
+    + List<EventLog> findEventLogByEventId(EventLogRepository eventLogRepository, int eventId)
+    + ArrayList<LocalDate> findEventLogDatesByEventId(EventLogRepository eventLogRepository, int eventId)
+    + List<EventsEntity> getEventsIdsByCountByUserId( EventLogRepository eventLogRepository, EventsRepository eventsRepository, int userId)
+    + float getFoodRelatedToAllEventsCount( FoodLogRepository foodLogRepository, int foodId, ArrayList<LocalDate> datesToFilterBy)
+}
+
+class FoodsHelper {
+    - static FoodsHelper instance
+    - FoodsHelper()
+    + static FoodsHelper getInstance()
+    + ArrayList<Food> getMostCommonByUserId(FoodLogRepository foodLogRepository, FoodRepository foodRepository, int userId)
+    + ArrayList<Food> getFoodMostCommonByDates(FoodLogRepository foodLogRepository, FoodRepository foodRepository, ArrayList<LocalDate> dates, int userId)
+}
+
+class HomeController {
+    - Events events
+    - FoodsHelper foodsHelper
+    - HttpSession session
+    - EventsRepository eventsRepository
+    - FoodRepository foodRepository
+    - EventLogRepository eventLogRepository
+    - FoodLogRepository foodLogRepository
+    String home(Model model)
+}
+HomeController o-- Events
+HomeController o-- FoodsHelper
+
+class EventsController {
+    - Events events
+    - FoodsHelper foodsHelper
+    - HttpSession session
+    - EventLogRepository eventLogRepository
+    - EventsRepository eventsRepository
+    - private FoodRepository foodRepository
+    - private FoodLogRepository foodLogRepository
+    + String eventsHome(Model model)
+    + String detail(int eventId, Model model)
+    + String add(Model model)
+    + String doAdd(String name, String eventDate)
+    + String addOccurence(int eventId,String occurrenceDate)
+    + boolean isLoggedIn()
+    + String getSessionUsername()
+    + int getSessionUserId()
+}
+
+EventsController o-- FoodsHelper
+EventsController o-- Events
+
+
+@enduml

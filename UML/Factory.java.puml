@@ -1,0 +1,56 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract User {
+    - UserEntity userEntity
+    + User(UserEntity userEntity)
+    + Integer getUserId()
+    + String getName()
+    + String getUsername()
+    + String getPassword()
+    + String getPermission()
+    + void setUserId(Integer id)
+    + void setName(String name)
+    + void setUsername(String username)
+    + void setPassword(String password)
+    + void setPermission(String permission)
+    + String toString()
+    + HashMap getPermissions()
+}
+
+class Admin {
+    + Admin(UserEntity userEntity)
+    + HashMap getPermissions()
+}
+
+class Standard {
+    + Standard(UserEntity userEntity)
+}
+
+class UserFactory {
+    + User getUser(UserEntity userEntity)
+}
+
+UserFactory --> Admin
+UserFactory --> Standard
+
+User <|-- Admin
+User <|-- Standard
+
+class RegistrationController {
+    - UserRepository userRepository
+    + void register(Model model)
+    + String doRegister(String name, String username, String password)
+}
+
+class LoginController {
+    - UserRepository userRepository
+    - HttpSession session
+    + String login()
+    + String doLogin(String username, String password)
+    + String logout()
+}
+
+LoginController o-- UserFactory
+RegistrationController o-- UserFactory
+@enduml
