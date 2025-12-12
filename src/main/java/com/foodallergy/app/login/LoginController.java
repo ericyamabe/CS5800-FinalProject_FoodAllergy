@@ -45,7 +45,6 @@ public class LoginController {
 
         session.setAttribute("username", user.getUsername());
         session.setAttribute("userId", user.getUserId());
-        session.setAttribute("permissions", user.getPermissions());
         return "redirect:/home";
     }
 
