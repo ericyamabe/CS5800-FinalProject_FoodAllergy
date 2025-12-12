@@ -53,9 +53,4 @@ public class RegistrationController {
 
         return "login";
     }
-
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<UserEntity> getAllUsers() {
-        return userRepository.findAll();
-    }
 }

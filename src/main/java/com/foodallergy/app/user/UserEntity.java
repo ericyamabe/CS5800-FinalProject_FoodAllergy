@@ -85,10 +85,4 @@ public class UserEntity {
     public String toString() {
         return String.format("Name: %s, Username: %s", this.name, this.username);
     }
-
-    public HashMap getPermissions() {
-        HashMap<String, Boolean> permissions = new HashMap<String, Boolean>();
-        permissions.put("admin", Boolean.FALSE);
-        return permissions;
-    }
 }
