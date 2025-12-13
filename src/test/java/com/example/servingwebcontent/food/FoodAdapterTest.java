@@ -1,5 +1,7 @@
 package com.example.servingwebcontent.food;
 
+import com.foodallergy.app.food.Food;
+import com.foodallergy.app.food.FoodAdapter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,6 +21,4 @@ class FoodAdapterTest {
         assertEquals("Apple", adapter.getName());
         assertEquals(5, adapter.getUserId());
     }
-}
-
 }

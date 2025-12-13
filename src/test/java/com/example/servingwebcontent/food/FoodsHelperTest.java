@@ -1,5 +1,9 @@
 package com.example.servingwebcontent.food;
 
+import com.foodallergy.app.food.Food;
+import com.foodallergy.app.food.FoodLogRepository;
+import com.foodallergy.app.food.FoodRepository;
+import com.foodallergy.app.food.FoodsHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +43,7 @@ class FoodsHelperTest {
         FoodsHelper instance1 = FoodsHelper.getInstance();
         FoodsHelper instance2 = FoodsHelper.getInstance();
 
-        assertSame(instance1, instance2);\
+        assertSame(instance1, instance2);
     }
 
     // ----------------------------------------------------\
